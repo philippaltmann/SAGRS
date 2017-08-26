@@ -54,7 +54,7 @@ func Optimize(o o.Options) (progressEvaluated []float64, progressApproximated []
 						distances += evaluationPool[i].DistanceTo(evaluationPool[j])
 					}
 				}
-				//Calc mean distance devide by additions & o.Dimensions
+				//Calc mean distance divide by additions & o.Dimensions
 				distances /= 45
 				distances /= 32
 				fmt.Printf("Distance in Pool at %f\n", distances)
