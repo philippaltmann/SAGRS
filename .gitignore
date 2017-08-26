@@ -1,0 +1,4 @@
+/Plotter/Plots/*
+Plotter/ValueChanged/*
+*.svg
+*.png
