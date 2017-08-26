@@ -2,6 +2,7 @@ package Population
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"os/exec"
 	"sort"
@@ -39,4 +40,4 @@ func (population Population) Sort() {
 // Fitness sorter
 func (f Population) Len() int           { return len(f) }
 func (f Population) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
-func (f Population) Less(i, j int) bool { return f[i].Fitness < f[j].Fitness }
+func (f Population) Less(i, j int) bool { return math.Abs(f[i].Fitness) < math.Abs(f[j].Fitness) }
