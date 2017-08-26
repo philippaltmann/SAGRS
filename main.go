@@ -9,11 +9,11 @@ import (
 
 func main() {
 	options := o.Options{
-		Cycles:              500,
+		Cycles:              10000,
 		EvaluationRate:      100,
 		EvaluationPoolSize:  10,
 		PopulationSize:      100,
-		Dimensions:          2,
+		Dimensions:          32,
 		SelectionFactor:     0.6,
 		MutationFactor:      0.3,
 		RecombinationFactor: 0.4}
