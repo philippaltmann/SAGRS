@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 
+	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation"
 	i "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Individual"
 	o "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Options"
 	g "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
@@ -18,6 +19,8 @@ func Optimize(o o.Options) (progressEvaluated []float64, progressApproximated []
 	var evaluationPool g.Population
 	evaluationPool = g.InitRandomPopulation(o.EvaluationPoolSize, o.Dimensions)
 	evaluationPool.Sort()
+
+	ApproximationMatrix := a.GetLSMApproximator(evaluationPool)
 
 	//Init & Sort population
 	//TODO pass in approximation
@@ -61,6 +64,9 @@ func Optimize(o o.Options) (progressEvaluated []float64, progressApproximated []
 			}
 			//Plotter.Plot2D(evaluationPool, int(cycle/o.EvaluationRate))
 
+			//Update Approximator
+			ApproximationMatrix = a.GetLSMApproximator(evaluationPool)
+
 		}
 
 		//Select
@@ -96,12 +102,13 @@ func Optimize(o o.Options) (progressEvaluated []float64, progressApproximated []
 		//Fillup
 		for len(population) < o.PopulationSize {
 			newIndiviudal := i.GenerateRandomIndiviudal(o.Dimensions)
-			newIndiviudal.ApproximateFitness(evaluationPool)
+			//newIndiviudal.ApproximateFitness(evaluationPool)
 			population = append(population, newIndiviudal)
 		}
 
 		//Evaluate
 		for j := 0; j < o.PopulationSize; j++ {
+			population[j].Fitness = a.ApproximateFitness(population[j].Value, ApproximationMatrix)
 			population[j].ApproximateFitness(evaluationPool)
 		}
 
