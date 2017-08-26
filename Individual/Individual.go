@@ -31,6 +31,7 @@ func GenerateRandomIndiviudal(dim int) (individual Individual) {
 	return GenerateIndividual(val)
 }
 
+//func (individual *Individual) EvaluateFitness(fitnessFunction func([]float64) float64) {
 func (individual *Individual) EvaluateFitness() {
 	//TODO read evaluation function from config file
 	individual.Fitness = Bohachevsky.EvaluateFitness(individual.Value)
