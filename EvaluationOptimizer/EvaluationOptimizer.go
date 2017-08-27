@@ -1,27 +1,20 @@
 package EvaluationOptimizer
 
 import (
-	"math"
-	"math/rand"
-	"time"
+	"fmt"
 
-	i "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Individual"
 	o "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Options"
 	g "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
 )
 
-func Optimize(o o.Options) (progress []float64) {
+func Optimize(o o.Options, FitnessFunction func([]float64) float64) (progress []float64) {
 
 	cycle := 0
-	bestFitness := math.MaxFloat64
 
-	//Init & Sort population
-	var population g.Population
-	population = g.InitRandomPopulation(o.PopulationSize, o.Dimensions)
+	//Init, Approximate & Sort Population
+	population := g.InitRandomPopulation(o.PopulationSize, o.Dimensions)
+	population.Evaluate(FitnessFunction)
 	population.Sort()
-
-	bestFitness = population[0].Fitness
-	progress = append(progress, bestFitness)
 
 	//Print best
 	population.PrintBest(cycle)
@@ -33,42 +26,16 @@ func Optimize(o o.Options) (progress []float64) {
 		population = population[:newSize]
 
 		//Mutate
-		/*Start incrementing from 1 to prevent mutation of best Individual*/
-		for p := 1; p < len(population); p++ {
-			r := rand.New(rand.NewSource(time.Now().UnixNano()))
-			mutate := r.Float64()
+		population.Mutate(o.MutationFactor)
 
-			if mutate > 1-o.MutationFactor {
-				population[p].Mutate()
-			}
-
-		}
 		//Recombine
-		for p := 0; p < len(population); p++ {
-			r := rand.New(rand.NewSource(time.Now().UnixNano()))
-			recombine := r.Float64()
-
-			if recombine > 1-o.RecombinationFactor {
-				combineWith := r.Intn(len(population))
-				newIndividual := population[p].Recombine(population[combineWith])
-				if len(population) < o.PopulationSize {
-					population = append(population, newIndividual)
-				}
-			}
-
-		}
+		population.Recombine(o.RecombinationFactor, o.PopulationSize)
 
 		//Fillup
-		for len(population) < o.PopulationSize {
-			newIndiviudal := i.GenerateRandomIndiviudal(o.Dimensions)
-			newIndiviudal.EvaluateFitness()
-			population = append(population, newIndiviudal)
-		}
+		population.Fillup(o.PopulationSize, o.Dimensions)
 
-		//Evaluate
-		for j := 0; j < o.PopulationSize; j++ {
-			population[j].EvaluateFitness()
-		}
+		//Evaluate using Fitness Function
+		population.Evaluate(FitnessFunction)
 
 		//Sort
 		population.Sort()
@@ -77,7 +44,8 @@ func Optimize(o o.Options) (progress []float64) {
 		progress = append(progress, population[0].Fitness)
 
 		//Print best
-		population.PrintBest(cycle)
+		//population.PrintBest(cycle)
+		fmt.Printf("Cycle %d: Best evaluated at %f\n", cycle, population[0].Fitness)
 
 		cycle++
 	}
