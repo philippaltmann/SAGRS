@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/gonum/matrix/mat64"
+	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Bohachevsky"
 	p "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
 )
 
@@ -101,3 +102,31 @@ func TestApproximation(t *testing.T) {
 func linearFitness(x float64) float64 {
 	return 0.8 * x
 }
+
+// from fib_test.go
+func benchmarkLSM(b *testing.B, dimensions int) {
+	size := 32
+
+	// run the Fib function b.N times
+	for n := 0; n < b.N; n++ {
+		if n%100 == 0 {
+			testPopulation = p.InitRandomPopulation(size, dimensions)
+			testPopulation.Evaluate(Bohachevsky.EvaluateFitness)
+			testApproximator = GetLSMApproximator(testPopulation)
+		}
+
+		var vals []float64
+		for v := 0; v < dimensions; v++ {
+			vals = append(vals, rand.Float64()*200-100)
+		}
+		ApproximateFitness(vals, testApproximator)
+
+	}
+}
+
+func BenchmarkLSM4(b *testing.B)   { benchmarkLSM(b, 4) }
+func BenchmarkLSM8(b *testing.B)   { benchmarkLSM(b, 8) }
+func BenchmarkLSM16(b *testing.B)  { benchmarkLSM(b, 16) }
+func BenchmarkLSM32(b *testing.B)  { benchmarkLSM(b, 32) }
+func BenchmarkLSM64(b *testing.B)  { benchmarkLSM(b, 64) }
+func BenchmarkLSM128(b *testing.B) { benchmarkLSM(b, 128) }
