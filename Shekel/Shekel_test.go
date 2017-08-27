@@ -32,10 +32,5 @@ func BenchmarkShekel(b *testing.B) {
 }
 
 /*
-BenchmarkShekel4-8     	20000000	        72.9 ns/op
-BenchmarkShekel8-8     	10000000	       148 ns/op
-BenchmarkShekel16-8    	 5000000	       290 ns/op
-BenchmarkShekel32-8    	 3000000	       570 ns/op
-BenchmarkShekel64-8    	 1000000	      1152 ns/op
-BenchmarkShekel128-8   	 1000000	      2254 ns/op
+BenchmarkShekel-8   	 5000000	       315 ns/op
 */
