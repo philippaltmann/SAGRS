@@ -1,7 +1,10 @@
 package Plotter
 
 import (
+	"encoding/csv"
 	"image/color"
+	"os"
+	"strconv"
 
 	"github.com/gonum/plot"
 	"github.com/gonum/plot/plotter"
@@ -80,4 +83,23 @@ func ConvertProgress(progress []float64) plotter.XYs {
 		pts[i].Y = progress[i]
 	}
 	return pts
+}
+
+func WriteCSV(progress []float64, fileName string) {
+
+	file, _ := os.Create(fileName + ".csv")
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	writer.Write([]string{"Cycle", "Line"})
+	for i, value := range progress {
+		line := []string{toString(float64(i)), toString(value)}
+		writer.Write(line)
+	}
+}
+
+func toString(num float64) string {
+	return strconv.FormatFloat(num, 'f', 6, 64)
 }
