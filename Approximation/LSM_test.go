@@ -21,27 +21,46 @@ const size = 64
 const dimensions = 16
 
 func TestGenerateFitnessVector(t *testing.T) {
+	testSum := 0.0
 	testPopulation = p.InitRandomPopulation(size, dimensions)
-	testFitnessVector := generateFitnessVector(testPopulation)
+	_, avrgY := generateAverages(testPopulation)
+	testFitnessVector := generateFitnessVector(testPopulation, avrgY)
 	//Test Fitness Vector
 	for i := 0; i < size; i++ {
-		if testPopulation[i].Fitness != testFitnessVector.At(i, 0) {
+		if testPopulation[i].Fitness-avrgY != testFitnessVector.At(i, 0) {
 			t.Errorf("Mismatching Results Testing Fitness Vector (%f||%f)", testPopulation[i].Fitness, testFitnessVector.At(i, 0))
 			t.Fail()
 		}
+		testSum += testFitnessVector.At(i, 0)
+	}
+	if testSum != 0 {
+		t.Errorf("Non zero test sum (%f)", testSum)
+		t.Fail()
 	}
 }
 
 func TestGenerateValueMatrix(t *testing.T) {
 	testPopulation = p.InitRandomPopulation(size, dimensions)
-	testValueMatrix := generateValueMatrix(testPopulation)
+	avrgX, _ := generateAverages(testPopulation)
+	testValueMatrix := generateValueMatrix(testPopulation, avrgX)
 	//Test Value matrix
 	for i := 0; i < size; i++ {
 		for j := 0; j < dimensions; j++ {
-			if testPopulation[i].Value[j] != testValueMatrix.At(i, j) {
-				t.Errorf("Mismatching Results Testing Value Matrix (%f||%f)", testPopulation[i].Value[j], testValueMatrix.At(i, j))
+			if testPopulation[i].Value[j]-avrgX[j] != testValueMatrix.At(i, j) {
+				t.Errorf("Mismatching Results Testing Value Matrix (%f||%f)", testPopulation[i].Value[j]-avrgX[j], testValueMatrix.At(i, j))
 				t.Fail()
 			}
+		}
+	}
+
+	for j := 0; j < dimensions; j++ {
+		testSum := 0.0
+		for i := 0; i < size; i++ {
+			testSum += testValueMatrix.At(i, j)
+		}
+		if math.Floor(math.Abs(testSum)) != 0 {
+			t.Errorf("Non zero test sum (%f)", testSum)
+			t.Fail()
 		}
 	}
 }
@@ -51,9 +70,12 @@ func TestGetLSM(t *testing.T) {
 	testPopulation = p.InitRandomPopulation(size, dimensions)
 
 	//Set fitness
-	for i := 0; i < size; i++ {
+	testPopulation.Evaluate(func(val []float64) float64 {
+		return 2 * val[0]
+	})
+	/*for i := 0; i < size; i++ {
 		testPopulation[i].Fitness = linearFitness(testPopulation[i].Value[0])
-	}
+	}*/
 
 	testApproximator = GetLSMApproximator(testPopulation)
 	r, c := testApproximator.Dims()
@@ -86,13 +108,15 @@ func TestApproximation(t *testing.T) {
 	}
 
 	testApproximator = GetLSMApproximator(testPopulation)
-
+	t.Log(testApproximator)
+	t.Log(testApproximator.At(0, 0))
 	tests := 10
 	for i := 0; i < tests; i++ {
 		testValue := []float64{rand.Float64()*200 - 100}
 		approximationResult := ApproximateFitness(testValue, testApproximator)
 		if math.Floor(approximationResult) != math.Floor(linearFitness(testValue[0])) {
-			t.Errorf("Mismatching Results Testing Linear Fitness Appromimation (%f||%f)∆%f", approximationResult, linearFitness(testValue[0]), approximationResult-linearFitness(testValue[0]))
+			t.Errorf("Mismatching Results Testing Linear Fitness Appromimation (%f||%f)∆%f\n", approximationResult, linearFitness(testValue[0]), approximationResult-linearFitness(testValue[0]))
+			t.Error(testApproximator)
 			t.Fail()
 		}
 	}
@@ -100,7 +124,7 @@ func TestApproximation(t *testing.T) {
 }
 
 func linearFitness(x float64) float64 {
-	return 0.8 * x
+	return 8*x - 5
 }
 
 // from fib_test.go
