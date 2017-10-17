@@ -2,11 +2,11 @@ package Population
 
 import (
 	"fmt"
-	"math"
 	"math/rand"
 	"os"
 	"os/exec"
 	"sort"
+	"time"
 
 	i "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Individual"
 )
@@ -36,7 +36,8 @@ func (population Population) PrintBest(cycle int) {
 func (population *Population) Mutate(factor float64) {
 	// Start at position 1 to prevent mutation of best individual
 	for p := 1; p < len(*population); p++ {
-		if rand.Float64() > 1-factor {
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		if r.Float64() > 1-factor {
 			(*population)[p].Mutate()
 		}
 	}
@@ -68,4 +69,4 @@ func (population Population) Sort() {
 // Fitness sorter
 func (f Population) Len() int           { return len(f) }
 func (f Population) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
-func (f Population) Less(i, j int) bool { return math.Abs(f[i].Fitness) < math.Abs(f[j].Fitness) }
+func (f Population) Less(i, j int) bool { return f[i].Fitness < f[j].Fitness }
