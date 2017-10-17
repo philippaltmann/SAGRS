@@ -3,6 +3,7 @@ package Individual
 import (
 	"math"
 	"math/rand"
+	"time"
 
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Bohachevsky"
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Schaffer"
@@ -25,7 +26,8 @@ func GenerateRandomIndiviudal(dim int) (individual Individual) {
 	var val []float64
 	size := math.Abs(upperBound - lowerBound)
 	for j := 0; j < dim; j++ {
-		val = append(val, rand.Float64()*size+lowerBound)
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		val = append(val, r.Float64()*size+lowerBound)
 	}
 	return GenerateIndividual(val)
 }
@@ -37,9 +39,9 @@ func (individual *Individual) EvaluateFitness() {
 }
 
 func (individual Individual) Mutate() {
-
-	position := rand.Intn(len(individual.Value))
-	mutation := rand.Float64()*2 - 1 //Mutation -1 +1
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	position := r.Intn(len(individual.Value))
+	mutation := r.Float64()*2 - 1 //Mutation -1 +1
 	individual.Value[position] += mutation
 
 }
