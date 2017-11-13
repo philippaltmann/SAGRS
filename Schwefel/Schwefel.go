@@ -4,8 +4,8 @@ import (
 	"math"
 )
 
-const UpperBound float64 = 500
-const LowerBound float64 = -500
+const UpperBound float64 = 100
+const LowerBound float64 = -100
 
 func EvaluateFitness(values []float64) (fitness float64) {
 	fitness = 418.9828872724339 * float64(len(values))
