@@ -2,6 +2,7 @@ package Population
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -64,6 +65,16 @@ func (population *Population) Fillup(size int, dimensions int) {
 
 func (population Population) Sort() {
 	sort.Sort(Population(population))
+}
+
+func (population Population) GetDiversity() (diversity float64) {
+	for i := 0; i < len(population); i++ {
+		for j := i; j < len(population); j++ {
+			diversity += math.Sqrt(population[i].EuclideanDistance(population[j]))
+		}
+	}
+	diversity /= float64(len(population))
+	return
 }
 
 // Fitness sorter

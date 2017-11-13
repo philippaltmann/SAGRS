@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Bohachevsky"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Schaffer"
+	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Schwefel"
 )
 
 //TODO read from config file
-const lowerBound float64 = Schaffer.LowerBound
-const upperBound float64 = Schaffer.UpperBound
+const lowerBound float64 = Schwefel.LowerBound
+const upperBound float64 = Schwefel.UpperBound
 
 type Individual struct {
 	Fitness float64
@@ -54,5 +54,12 @@ func (individual Individual) Recombine(with Individual) (newIndividual Individua
 		newValue = append(newValue, tmpVal)
 	}
 	newIndividual = GenerateIndividual(newValue)
+	return
+}
+
+func (from Individual) EuclideanDistance(to Individual) (distance float64) {
+	for i, v := range from.Value {
+		distance += math.Pow((v - to.Value[i]), 2)
+	}
 	return
 }
