@@ -1,12 +1,15 @@
 package Approximation
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/gonum/matrix/mat64"
 	p "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
 )
+
+type LSMApproximator struct {
+	ApproximationMatrix mat64.Dense
+}
 
 func generateFitnessVector(population p.Population, avrg float64) *mat64.Dense {
 	var fitnessSlice []float64
@@ -52,7 +55,6 @@ func generateAverages(population p.Population) (avrgX []float64, avrgY float64) 
 
 func GetLSMApproximator(population p.Population) (approxmationMatrix mat64.Dense) {
 
-	fmt.Println(len(population))
 	avrgX, avrgY := generateAverages(population)
 	y := generateFitnessVector(population, avrgY)
 	X := generateValueMatrix(population, avrgX)
@@ -70,25 +72,25 @@ func GetLSMApproximator(population p.Population) (approxmationMatrix mat64.Dense
 	var theta mat64.Dense
 	theta.Mul(&firstInverse, &second)
 
-	var aSlice []float64
+	/*var aSlice []float64
 	for i := 0; i < len(population[0].Value); i++ {
 		a := avrgY - theta.At(i, 0)*avrgX[i]
 		aSlice = append(aSlice, a)
-	}
+	}*/
 
-	r, c := theta.Dims()
-	fmt.Printf("R: %d, C: %d\n", r, c)
-	tmpMatrix := theta.Grow(0, 1)
-	thetaMulti := *mat64.DenseCopyOf(tmpMatrix)
-	r, c = thetaMulti.Dims()
-	fmt.Printf("R: %d, C: %d\n", r, c)
+	//r, c := theta.Dims()
+	//fmt.Printf("R: %d, C: %d\n", r, c)
+	/*tmpMatrix := theta.Grow(0, 1)
+	thetaMulti := *mat64.DenseCopyOf(tmpMatrix)*/
+	//r, c = thetaMulti.Dims()
+	//fmt.Printf("R: %d, C: %d\n", r, c)
 
-	fmt.Print(thetaMulti.At(0, 1))
-	thetaMulti.SetCol(1, aSlice)
-	fmt.Print(thetaMulti.At(0, 1))
+	//fmt.Print(thetaMulti.At(0, 1))
+	//thetaMulti.SetCol(1, aSlice)
+	//fmt.Print(thetaMulti.At(0, 1))
 
-	fmt.Printf("TM: %v\n", thetaMulti)
-	return thetaMulti
+	//fmt.Printf("TM: %v\n", thetaMulti)
+	return theta
 
 }
 
@@ -96,13 +98,15 @@ func ApproximateFitness(value []float64, ApproximationMatrix mat64.Dense) (fitne
 	valueVector := mat64.NewDense(1, len(value), value)
 	var resultMatrix mat64.Dense
 	resultMatrix.Mul(valueVector, &ApproximationMatrix)
-	result := 0.0 //resultMatrix.At(0, 0)
-	deg := 1
+	result := math.Abs(resultMatrix.At(0, 0))
+
+	//result := 0.0 //resultMatrix.At(0, 0)
+	/*deg := 1
 	for d := 0; d < 2; d++ {
 		for i := 0; i < len(value); i++ {
 			result += math.Pow(value[i], float64(deg)) * ApproximationMatrix.At(i, d)
 		}
 		deg--
-	}
+	}*/
 	return result
 }
