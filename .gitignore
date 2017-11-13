@@ -4,6 +4,7 @@ Plotter/ValueChanged/*
 *.svg
 *.png
 *.csv
+*.txt
 
 ### macOS ###
 *.DS_Store
