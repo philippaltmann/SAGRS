@@ -4,61 +4,64 @@ import (
 	"math"
 	"math/rand"
 	"time"
-
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Bohachevsky"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Schwefel"
 )
 
-//TODO read from config file
-const lowerBound float64 = Schwefel.LowerBound
-const upperBound float64 = Schwefel.UpperBound
-
+//Individual Type
 type Individual struct {
 	Fitness float64
 	Value   []float64
 }
 
+//GenerateIndividual with given values
 func GenerateIndividual(value []float64) (individual Individual) {
 	return Individual{-1.0, value}
 }
 
-func GenerateRandomIndiviudal(dim int) (individual Individual) {
-	var val []float64
-	size := math.Abs(upperBound - lowerBound)
+//GenerateRandomIndiviudal with given dimensions
+func GenerateRandomIndiviudal(dim int, min, max float64) Individual {
+	var value []float64
+	size := math.Abs(max - min)
 	for j := 0; j < dim; j++ {
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		val = append(val, r.Float64()*size+lowerBound)
+		value = append(value, r.Float64()*size+min)
 	}
-	return GenerateIndividual(val)
+	return GenerateIndividual(value)
 }
 
-//func (individual *Individual) EvaluateFitness(fitnessFunction func([]float64) float64) {
-func (individual *Individual) EvaluateFitness() {
-	//TODO read evaluation function from config file
-	individual.Fitness = Bohachevsky.EvaluateFitness(individual.Value)
-}
-
-func (individual Individual) Mutate() {
+//Mutate the receiver Individual  by ±1 in a random dimension
+func (individual *Individual) Mutate() {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	position := r.Intn(len(individual.Value))
 	mutation := r.Float64()*2 - 1 //Mutation -1 +1
 	individual.Value[position] += mutation
-
 }
 
+//Recombine the receiver Individual with the passed in using crossover
 func (individual Individual) Recombine(with Individual) (newIndividual Individual) {
+	value1 := make([]float64, len(individual.Value))
+	value2 := make([]float64, len(with.Value))
 	var newValue []float64
-	count := len(individual.Value)
-	for i := 0; i < count; i++ {
-		tmpVal := (individual.Value[i] + with.Value[i]) / 2
-		newValue = append(newValue, tmpVal)
-	}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	crossover := r.Intn(len(individual.Value)-1) + 1
+	copy(value1, individual.Value)
+	copy(value2, with.Value)
+	newValue = append(value1[:crossover], value2[crossover:]...)
 	newIndividual = GenerateIndividual(newValue)
 	return
 }
 
-func (from Individual) EuclideanDistance(to Individual) (distance float64) {
-	for i, v := range from.Value {
+//DuplicateIndividual Deep Copies Individuals
+func DuplicateIndividual(individual Individual) Individual {
+	valueCopy := make([]float64, len(individual.Value))
+	copy(valueCopy, individual.Value)
+	duplicate := GenerateIndividual(valueCopy)
+	return duplicate
+}
+
+//EuclideanDistance calculated between the receiver and passed in Individual
+func (individual Individual) EuclideanDistance(to Individual) (distance float64) {
+	for i, v := range individual.Value {
 		distance += math.Pow((v - to.Value[i]), 2)
 	}
 	return
