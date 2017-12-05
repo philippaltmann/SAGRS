@@ -1,39 +1,49 @@
 package Population
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
-	"os"
-	"os/exec"
 	"sort"
 	"time"
 
 	i "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Individual"
 )
 
+/*Population is a Slice of individuals with custom applyable functions*/
 type Population []i.Individual
 
-func InitRandomPopulation(size int, dimensions int) (population Population) {
+// Helper functions for sorting capabilities
+func (population Population) Len() int { return len(population) }
+func (population Population) Swap(i, j int) {
+	population[i], population[j] = population[j], population[i]
+}
+func (population Population) Less(i, j int) bool {
+	return population[i].Fitness < population[j].Fitness
+}
+
+/*InitRandomPopulation generates a new random population
+using the passed in size dimensions and value bounds*/
+func InitRandomPopulation(size, dimensions int, min, max float64) (population Population) {
 	for g := 0; g < size; g++ {
-		population = append(population, i.GenerateRandomIndiviudal(dimensions))
+		population = append(population, i.GenerateRandomIndiviudal(dimensions, min, max))
 	}
 	return
 }
 
-func (g Population) Evaluate(f func([]float64) float64) {
-	for i := 0; i < len(g); i++ {
-		g[i].Fitness = f(g[i].Value)
+/*Evaluate calculates & assigns fitness values to all individuals
+using the passed in function*/
+func (population Population) Evaluate(f func([]float64) float64) {
+	for i := 0; i < len(population); i++ {
+		population[i].Fitness = f(population[i].Value)
 	}
 }
 
-func (population Population) PrintBest(cycle int) {
-	c := exec.Command("clear")
-	c.Stdout = os.Stdout
-	c.Run()
-	fmt.Printf("Cycle %d, with best at %f (%v)\n", cycle, population[0].Fitness, population[0].Value)
+/*Sort the given population by fitness value ascending*/
+func (population Population) Sort() {
+	sort.Sort(Population(population))
 }
 
+/*Mutate Mutates individuals in the popultion with the given propability*/
 func (population *Population) Mutate(factor float64) {
 	// Start at position 1 to prevent mutation of best individual
 	for p := 1; p < len(*population); p++ {
@@ -44,6 +54,8 @@ func (population *Population) Mutate(factor float64) {
 	}
 }
 
+/*Recombine appends Recombined Individuals with the passed in propability
+to the Population until the maximum population size is reached*/
 func (population *Population) Recombine(factor float64, size int) {
 	for p := 0; p < len(*population); p++ {
 		if rand.Float64() > 1-factor {
@@ -56,17 +68,17 @@ func (population *Population) Recombine(factor float64, size int) {
 	}
 }
 
-func (population *Population) Fillup(size int, dimensions int) {
+/*Fillup appends new random individuals in the given range to the
+population until the maximum popultion size is reached*/
+func (population *Population) Fillup(size, dimensions int, min, max float64) {
 	for len(*population) < size {
-		newIndiviudal := i.GenerateRandomIndiviudal(dimensions)
+		newIndiviudal := i.GenerateRandomIndiviudal(dimensions, min, max)
 		*population = append(*population, newIndiviudal)
 	}
 }
 
-func (population Population) Sort() {
-	sort.Sort(Population(population))
-}
-
+/*GetDiversity calculates the populations diversity using the normed Euclidean Distance
+between the Indivuduals, dividing by the population size*/
 func (population Population) GetDiversity() (diversity float64) {
 	for i := 0; i < len(population); i++ {
 		for j := i; j < len(population); j++ {
@@ -76,8 +88,3 @@ func (population Population) GetDiversity() (diversity float64) {
 	diversity /= float64(len(population))
 	return
 }
-
-// Fitness sorter
-func (f Population) Len() int           { return len(f) }
-func (f Population) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
-func (f Population) Less(i, j int) bool { return f[i].Fitness < f[j].Fitness }
