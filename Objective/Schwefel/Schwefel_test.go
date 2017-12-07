@@ -7,11 +7,14 @@ import (
 
 func TestEvaluateFitness(t *testing.T) {
 	//Testing if minimum is calculated as defined
+	testSchwefel := Schwefel{}
+	testSchwefel.Min()
+	testSchwefel.Max()
 	testValues := make([]float64, 32)
 	for i := 0; i < len(testValues); i++ {
 		testValues[i] = 420.96874636
 	}
-	testResult := EvaluateFitness(testValues)
+	testResult := testSchwefel.EvaluateFitness(testValues)
 	if testResult > 1e-10 || testResult < -1e-10 {
 		t.Error("Minimum not 0\n")
 		t.Error(testResult)
@@ -20,13 +23,14 @@ func TestEvaluateFitness(t *testing.T) {
 }
 
 func benchmarkSchwefel(b *testing.B, dimensions int) {
+	testSchwefel := Schwefel{}
 	var vals []float64
 	for v := 0; v < dimensions; v++ {
 		vals = append(vals, rand.Float64()*200-100)
 	}
 
 	for n := 0; n < b.N; n++ {
-		EvaluateFitness(vals)
+		testSchwefel.EvaluateFitness(vals)
 	}
 }
 func BenchmarkSchwefel4(b *testing.B)   { benchmarkSchwefel(b, 4) }

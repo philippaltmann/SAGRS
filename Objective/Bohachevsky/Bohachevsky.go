@@ -2,10 +2,17 @@ package Bohachevsky
 
 import "math"
 
-const UpperBound float64 = 100
-const LowerBound float64 = -100
+// Bohachevsky Empty Struct for Unversal Objective Application
+type Bohachevsky struct{}
 
-func EvaluateFitness(values []float64) (fitness float64) {
+//Min returns the Objectives Lower Bound
+func (b Bohachevsky) Min() float64 { return -100.0 }
+
+//Max return the Objectives Upper Bound
+func (b Bohachevsky) Max() float64 { return 100.0 }
+
+//EvaluateFitness calculates the Objective fitness using the passed in value
+func (b Bohachevsky) EvaluateFitness(values []float64) (fitness float64) {
 	fitness = 0
 	for i := 0; i < len(values)-1; i++ {
 		xi := values[i]

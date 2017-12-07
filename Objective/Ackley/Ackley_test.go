@@ -3,8 +3,11 @@ package Ackley
 import "testing"
 
 func TestAckley(t *testing.T) {
+	testAckley := Ackley{}
+	testAckley.Min()
+	testAckley.Max()
 	testValues := []float64{0.0, 0.0}
-	testResult := EvaluateFitness(testValues)
+	testResult := testAckley.EvaluateFitness(testValues)
 
 	if testResult != 0.0 {
 		t.Logf("False Minimum at %f", testResult)

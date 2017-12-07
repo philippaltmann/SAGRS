@@ -7,8 +7,11 @@ import (
 
 func TestEvaluateFitness(t *testing.T) {
 	//Testing if minimum is calculated as defined
+	testBohachevsky := Bohachevsky{}
+	testBohachevsky.Min()
+	testBohachevsky.Max()
 	testValues := make([]float64, 32)
-	testResult := EvaluateFitness(testValues)
+	testResult := testBohachevsky.EvaluateFitness(testValues)
 	if testResult != 0 {
 		t.Error("Minimum not 0\n")
 		t.Error(testResult)
@@ -17,13 +20,14 @@ func TestEvaluateFitness(t *testing.T) {
 }
 
 func benchmarkBohachevsky(b *testing.B, dimensions int) {
+	testBohachevsky := Bohachevsky{}
 	var vals []float64
 	for v := 0; v < dimensions; v++ {
 		vals = append(vals, rand.Float64()*200-100)
 	}
 
 	for n := 0; n < b.N; n++ {
-		EvaluateFitness(vals)
+		testBohachevsky.EvaluateFitness(vals)
 	}
 }
 func BenchmarkBohachevsky4(b *testing.B)   { benchmarkBohachevsky(b, 4) }
