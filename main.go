@@ -17,8 +17,12 @@ func main() {
 	case "benchmark":
 		switch args[1] {
 		case "rates":
-			rates := []int{0, 1, 2, 3, 4, 5, 6, 8, 16, 32, 64}
-			Benchmark.TestEvaluationRates(10, rates)
+			if len(args) == 4 {
+				rates := []int{0, 1, 2, 3, 4, 5, 6, 8, 16, 32, 64}
+				approximator := args[2]
+				objective := args[3]
+				Benchmark.TestEvaluationRates(10, rates, approximator, objective)
+			}
 		}
 	}
 }
