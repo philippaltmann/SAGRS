@@ -13,8 +13,14 @@ func TestObjective(t *testing.T) {
 	testSchwefel.Max()
 	testSchwefel.EvaluateFitness([]float64{1.0, 2.0, 3.0})
 
-	testBohachevsky := GetObjective("Bohachevksy")
+	testBohachevsky := GetObjective("Bohachevsky")
 	testBohachevsky.Min()
 	testBohachevsky.Max()
 	testBohachevsky.EvaluateFitness([]float64{1.0, 2.0, 3.0})
+
+	testLinear := GetObjective("Linear")
+	testLinear.Min()
+	testLinear.Max()
+	testLinear.EvaluateFitness([]float64{1.0, 2.0, 3.0})
+
 }

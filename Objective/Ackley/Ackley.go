@@ -6,10 +6,10 @@ import "math"
 type Ackley struct{}
 
 //Min returns the Objectives Lower Bound
-func (a Ackley) Min() float64 { return -15.0 }
+func (a Ackley) Min() float64 { return -100.0 }
 
 //Max return the Objectives Upper Bound
-func (a Ackley) Max() float64 { return 30.0 }
+func (a Ackley) Max() float64 { return 100.0 }
 
 //EvaluateFitness calculates the Objective fitness using the passed in value
 func (a Ackley) EvaluateFitness(values []float64) float64 {

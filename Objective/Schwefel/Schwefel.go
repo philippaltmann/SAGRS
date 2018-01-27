@@ -6,10 +6,10 @@ import "math"
 type Schwefel struct{}
 
 //Min returns the Objectives Lower Bound
-func (s Schwefel) Min() float64 { return -100.0 }
+func (s Schwefel) Min() float64 { return -500.0 }
 
 //Max return the Objectives Upper Bound
-func (s Schwefel) Max() float64 { return 100.0 }
+func (s Schwefel) Max() float64 { return 500.0 }
 
 //EvaluateFitness calculates the Objective fitness using the passed in value
 func (s Schwefel) EvaluateFitness(values []float64) (fitness float64) {

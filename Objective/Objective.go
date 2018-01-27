@@ -1,5 +1,6 @@
 package Objective
 
+import l "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Linear"
 import a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Ackley"
 import b "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Bohachevsky"
 import s "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Schwefel"
@@ -18,8 +19,9 @@ func GetObjective(name string) Objective {
 		return a.Ackley{}
 	case "Schwefel":
 		return s.Schwefel{}
-	default:
+	case "Bohachevsky":
 		return b.Bohachevsky{}
-
+	default:
+		return l.Linear{}
 	}
 }
