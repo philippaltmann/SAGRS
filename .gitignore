@@ -7,6 +7,7 @@ Plotter/ValueChanged/*
 *.txt
 /Tests/
 /Test/
+/Tests_tmp/
 
 ### macOS ###
 *.DS_Store
