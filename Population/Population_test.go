@@ -54,7 +54,7 @@ func TestEvaluateFitness(t *testing.T) {
 }
 
 func TestSort(t *testing.T) {
-	testPopulation.Sort()
+	//testPopulation.Sort()
 	tmpFitness := -1.0
 	for _, i := range testPopulation {
 		if i.Fitness < tmpFitness {
@@ -63,6 +63,12 @@ func TestSort(t *testing.T) {
 		}
 		tmpFitness = i.Fitness
 	}
+}
+
+func TestSelect(t *testing.T) {
+	t.Log(testPopulation)
+	testPopulation.Select(0.8)
+	t.Log(testPopulation)
 }
 
 func TestDiversity(t *testing.T) {

@@ -9,7 +9,7 @@ import (
 	i "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Individual"
 )
 
-/*Population is a Slice of individuals with custom applyable functions*/
+//Population is a Slice of individuals with custom applyable functions
 type Population []i.Individual
 
 // Helper functions for sorting capabilities
@@ -30,17 +30,24 @@ func InitRandomPopulation(size, dimensions int, min, max float64) (population Po
 	return
 }
 
+/*func (population Population) Add(value []float64) Population {
+	newIndividual := i.GenerateIndividual(value)
+	population = append(population, newIndividual)
+	return population
+}*/
+
 /*Evaluate calculates & assigns fitness values to all individuals
 using the passed in function*/
-func (population Population) Evaluate(f func([]float64) float64) {
-	for i := 0; i < len(population); i++ {
-		population[i].Fitness = f(population[i].Value)
+func (population *Population) Evaluate(f func([]float64) float64) {
+	for i := 0; i < len(*population); i++ {
+		(*population)[i].Fitness = f((*population)[i].Value)
 	}
+	sort.Sort(Population(*population))
 }
 
-/*Sort the given population by fitness value ascending*/
-func (population Population) Sort() {
-	sort.Sort(Population(population))
+// Select performs natual Selection on the given Population
+func (population *Population) Select(factor float64) {
+	*population = (*population)[:int(float64(len(*population))*factor)]
 }
 
 /*Mutate Mutates individuals in the popultion with the given propability*/
