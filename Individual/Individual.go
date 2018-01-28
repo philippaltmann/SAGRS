@@ -10,11 +10,13 @@ import (
 type Individual struct {
 	Fitness float64
 	Value   []float64
+	Min     float64
+	Max     float64
 }
 
 //GenerateIndividual with given values
-func GenerateIndividual(value []float64) (individual Individual) {
-	return Individual{-1.0, value}
+func GenerateIndividual(value []float64, min, max float64) (individual Individual) {
+	return Individual{-1.0, value, min, max}
 }
 
 //GenerateRandomIndiviudal with given dimensions
@@ -25,7 +27,7 @@ func GenerateRandomIndiviudal(dim int, min, max float64) Individual {
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
 		value = append(value, r.Float64()*size+min)
 	}
-	return GenerateIndividual(value)
+	return GenerateIndividual(value, min, max)
 }
 
 //Mutate the receiver Individual  by ±1 in a random dimension
@@ -33,7 +35,10 @@ func (individual *Individual) Mutate() {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	position := r.Intn(len(individual.Value))
 	mutation := r.Float64()*2 - 1 //Mutation -1 +1
-	individual.Value[position] += mutation
+	newValue := individual.Value[position] + mutation
+	if newValue > individual.Min && newValue < individual.Max {
+		individual.Value[position] += mutation
+	}
 }
 
 //Recombine the receiver Individual with the passed in using crossover
@@ -47,7 +52,7 @@ func (individual Individual) Recombine(with Individual) (newIndividual Individua
 	copy(value1, individual.Value)
 	copy(value2, with.Value)
 	newValue = append(value1[:crossover], value2[crossover:]...)
-	newIndividual = GenerateIndividual(newValue)
+	newIndividual = GenerateIndividual(newValue, individual.Min, individual.Max)
 	return
 }
 
@@ -55,7 +60,7 @@ func (individual Individual) Recombine(with Individual) (newIndividual Individua
 func DuplicateIndividual(individual Individual) Individual {
 	valueCopy := make([]float64, len(individual.Value))
 	copy(valueCopy, individual.Value)
-	duplicate := GenerateIndividual(valueCopy)
+	duplicate := GenerateIndividual(valueCopy, individual.Min, individual.Max)
 	return duplicate
 }
 

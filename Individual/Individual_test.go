@@ -48,7 +48,6 @@ func TestRest(t *testing.T) {
 func TestRandomInit(t *testing.T) {
 	testings := 100
 
-	t.Logf("Bounds at %f < x < %f", lowerBound, upperBound)
 	for r := 0; r < testings; r++ {
 		testDimensions := 32
 		testIndiviudal := GenerateRandomIndiviudal(testDimensions, lowerBound, upperBound)
