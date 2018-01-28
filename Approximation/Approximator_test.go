@@ -1,56 +1,56 @@
 package Approximation
 
 import (
+	"math"
 	"testing"
 
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Bohachevsky"
+	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective"
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
 )
 
-func TestRBFApproximator(t *testing.T) {
-	size := 100
-	dimensions := 2
+func TestApproximator(t *testing.T) {
+	testPopulation := Population.InitRandomPopulation(10, 1, -10.0, 10.0)
+	testObjective := Objective.GetObjective("")
+	testPopulation.Evaluate(testObjective.EvaluateFitness)
+	testRBF := GetApproximator("RBF")
+	testRBF.Update(testPopulation)
+	testLSM := GetApproximator("LSM")
+	testLSM.Update(testPopulation)
+	testEvaluation := GetApproximator("")
+	testEvaluation.Update(testPopulation)
 
-	//Init Approximator
-	//testApproximator := GenerateRBFApproximator(size, dimensions)
-	testApproximator := new(RBFApproximator)
+	for _, i := range testPopulation {
+		//Test RBF
+		if round(testRBF.Predict(i.Value), 2) != round(i.Fitness, 2) {
+			t.Error("Failed to use RBF")
+			t.Fail()
+		}
 
-	/*wrongHiddenLayerSize := len(testApproximator.HiddenLayer) != size
-	wrongWeightsSize := len(testApproximator.Weights) != size
-	wrongDimensions := len(testApproximator.HiddenLayer[0].center) != dimensions
-	t.Log("Testing Size & Dimension")
-	if wrongHiddenLayerSize || wrongWeightsSize || wrongDimensions {
-		t.Error("Wrong Size")
-		t.Fail()
-	}*/
-	//var a Approximator
-	testPopulation := Population.InitRandomPopulation(size, dimensions)
-	testPopulation.Evaluate(Bohachevsky.EvaluateFitness)
+		//Test LSM
+		if round(testLSM.Predict(i.Value), 2) != round(i.Fitness, 2) {
+			t.Error("Failed to use LSM")
+			t.Fail()
+		}
 
-	testApproximator.Update(testPopulation)
-	testPrediction := testApproximator.Predict([]float64{0, 0})
-	if testPrediction < 1.0 {
-		t.Log("Success")
+		//Test Evaluation
+		if testEvaluation.Predict(i.Value) != i.Fitness {
+			t.Error("Failed to use Evaluation")
+			t.Fail()
+		}
 	}
 }
-func TestLSMApproximator(t *testing.T) {
-	size := 100
-	dimensions := 2
 
-	//Init Approximator
-	testApproximator := new(LSMApproximator)
-
-	//var a Approximator
-	testPopulation := Population.InitRandomPopulation(size, dimensions)
-	testPopulation.Evaluate(Bohachevsky.EvaluateFitness)
-
-	testApproximator.Update(testPopulation)
-
-	t.Log(testApproximator)
-
-	testPopulation2 := Population.InitRandomPopulation(size, dimensions)
-	testPopulation2.Evaluate(Bohachevsky.EvaluateFitness)
-	testApproximator.Update(testPopulation2)
-
-	t.Log(testApproximator)
+func round(val float64, places int) (newVal float64) {
+	roundOn := .5
+	var round float64
+	pow := math.Pow(10, float64(places))
+	digit := pow * val
+	_, div := math.Modf(digit)
+	if div >= roundOn {
+		round = math.Ceil(digit)
+	} else {
+		round = math.Floor(digit)
+	}
+	newVal = round / pow
+	return
 }
