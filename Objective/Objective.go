@@ -13,6 +13,7 @@ type Objective interface {
 }
 
 //GetObjective Generates Objective By Name
+//Defaults to linear Objective used For Testing
 func GetObjective(name string) Objective {
 	switch name {
 	case "Ackley":
