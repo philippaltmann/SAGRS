@@ -13,8 +13,13 @@ type RBF struct {
 	Weights     []float64
 }
 
-//GetFunctionMatrix applies the hidden layer bias functions to the input
-func (a RBF) GetFunctionMatrix(input [][]float64) *mat64.Dense {
+//Create new instance of RBF
+func Create() *RBF {
+	return &RBF{}
+}
+
+//getFunctionMatrix applies the hidden layer bias functions to the input
+func (a RBF) getFunctionMatrix(input [][]float64) *mat64.Dense {
 	var functionSlice []float64
 	for _, layer := range a.HiddenLayer {
 		for _, value := range input {
@@ -50,7 +55,7 @@ func (a *RBF) Update(population Population.Population) {
 	}
 
 	//"Train" Weights
-	functionMatrix := a.GetFunctionMatrix(input)
+	functionMatrix := a.getFunctionMatrix(input)
 	functionMatrix.Inverse(functionMatrix)
 
 	var W mat64.Dense
@@ -69,4 +74,8 @@ func (a RBF) Predict(value []float64) float64 {
 	weightVector := mat64.NewVector(len(a.Weights), a.Weights)
 	result := mat64.Dot(valueVector, weightVector)
 	return result
+}
+
+func (a *RBF) Formatted() string {
+	return ""
 }
