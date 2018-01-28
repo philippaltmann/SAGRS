@@ -1,6 +1,6 @@
 package Benchmark
 
-import (
+/*import (
 	"encoding/csv"
 	"os"
 	"strconv"
@@ -8,8 +8,8 @@ import (
 	"github.com/buger/goterm"
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation"
 	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/ApproximationOptimizer"
+	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Schwefel"
 	o "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Options"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Schwefel"
 )
 
 func TestConvergence() {
@@ -70,4 +70,4 @@ func TestConvergence() {
 
 		}
 	}
-}
+}*/

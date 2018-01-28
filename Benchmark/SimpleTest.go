@@ -1,13 +1,13 @@
 package Benchmark
 
-import (
+/*import (
 	"fmt"
 	"os"
 
 	"github.com/buger/goterm"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Ackley"
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation"
 	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/ApproximationOptimizer"
+	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Ackley"
 	o "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Options"
 )
 
@@ -39,4 +39,4 @@ func SimpleTest() {
 	_, cycle := a.Optimize(options, fitnessFunction, Approximator)
 	fmt.Printf("Converged in cycle %d", cycle)
 	functionFile.WriteString(Approximator.GetFunction() + "\n\n")
-}
+}*/

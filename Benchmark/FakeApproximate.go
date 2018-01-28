@@ -1,11 +1,11 @@
 package Benchmark
 
-import (
+/*import (
 	"os"
 
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation"
 	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/ApproximationOptimizer"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Bohachevsky"
+	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Bohachevsky"
 	o "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Options"
 )
 
@@ -31,5 +31,5 @@ func FakeApproximator() {
 	_ = os.Mkdir("FakeApproximator", 0777)
 	options.ProgressFileName = "FakeApproximator/Test"
 	//initialPopulation := *new(Population.Population)
-	a.Optimize(options, fitnessFunction, Approximator /*initialPopulation*/)
-}
+	a.Optimize(options, fitnessFunction, Approximator )
+}*/

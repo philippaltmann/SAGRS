@@ -2,86 +2,85 @@ package Benchmark
 
 import (
 	"encoding/csv"
-	"math"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/buger/goterm"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Ackley"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation"
 	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/ApproximationOptimizer"
-	o "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Options"
+	e "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Environment"
 )
 
-func TestEvaluationRates(compare, rates, start int) {
-	options := o.Options{
-		Cycles:               1000,
-		SuggestToEvaluation:  1,
-		EvaluationPoolSize:   100,
-		PopulationSize:       1000,
-		Dimensions:           2,
-		SelectionFactor:      0.6,
-		MutationFactor:       0.3,
-		RecombinationFactor:  0.4,
-		WriteProgress:        false,
-		Verbose:              true,
-		ResetPool:            false,
-		ConvergenceThreshold: 100}
-
-	approximatorType := "RBF"
-	optimizationType := "Ackley"
-	fitnessFunction := Ackley.EvaluateFitness
-
-	var Approximator Approximation.Approximator
-	switch approximatorType {
-	case "LSM":
-		Approximator = new(Approximation.LSMApproximator)
-		options.EvaluationRate = 2
-	case "RBF":
-		Approximator = new(Approximation.RBFApproximator)
-		options.EvaluationRate = 8
-	default:
-		Approximator = Approximation.GenerateEvaluation(fitnessFunction)
-	}
+func TestEvaluationRates(compare int, rates []int, approximator string, objective string, cycles int) {
+	environment := e.Environment{
+		SuggestToEvaluation: 1,
+		EvaluationPoolSize:  100,
+		PopulationSize:      100,
+		Dimensions:          2,
+		SelectionFactor:     0.9,
+		MutationFactor:      0.1,
+		RecombinationFactor: 0.05,
+		WriteProgress:       true,
+		Verbose:             true,
+		ResetPool:           false,
+		Cycles:              cycles,
+		Approximator:        approximator,
+		Objective:           objective}
 
 	var resetPath string
-	switch options.ResetPool {
+	switch environment.ResetPool {
 	case true:
 		resetPath = "Reset"
 	default:
 		resetPath = "NoReset"
 	}
+	path := "Tests/EvaluationRate"
+	_ = os.Mkdir(path, 0777)
+	path += "/" + strconv.Itoa(environment.Dimensions) + "Dim"
+	_ = os.Mkdir(path, 0777)
+	path += "/" + resetPath
+	_ = os.Mkdir(path, 0777)
+	path += "/" + environment.Approximator
+	_ = os.Mkdir(path, 0777)
+	path += "/" + environment.Objective
+	_ = os.Mkdir(path, 0777)
 
-	_ = os.Mkdir("EvaluationRateTest"+approximatorType+"", 0777)
-	_ = os.Mkdir("EvaluationRateTest"+approximatorType+"/"+resetPath+"", 0777)
-	_ = os.Mkdir("EvaluationRateTest"+approximatorType+"/"+resetPath+"/"+optimizationType, 0777)
-	_ = os.Mkdir("EvaluationRateTest"+approximatorType+"/"+resetPath+"/"+optimizationType+"/"+strconv.Itoa(options.Dimensions)+"Dim", 0777)
-	basePath := "EvaluationRateTest" + approximatorType + "/" + resetPath + "/" + optimizationType + "/" + strconv.Itoa(options.Dimensions) + "Dim"
+	scan, _ := ioutil.ReadDir(path)
+	dirs := make([]string, 0)
+	for _, f := range scan {
+		if f.IsDir() {
+			dirs = append(dirs, f.Name())
+		}
+	}
 
-	file, _ := os.Create(basePath + "/EvaluationRateTestCompare.csv")
+	dir, _ := strconv.Atoi(dirs[len(dirs)-1])
+	path += "/" + strconv.Itoa(1+dir)
+	_ = os.Mkdir(path, 0777)
+
+	environment.Dump(path + "/Environment.json")
+
+	file, _ := os.Create(path + "/EvaluationRateTestCompare.csv")
 	defer file.Close()
 	writer := csv.NewWriter(file)
-	defer writer.Flush()
 	writer.Write([]string{"Rate", "Best Fitness", "Convergence"})
-
-	var functionFile *os.File
+	writer.Flush()
 
 	goterm.Clear()
-	for r := 0; r < rates; r++ {
-		options.EvaluationRate = int(math.Pow(2, float64(r+start))) //0
-		functionFile, _ = os.Create(basePath + "/Functions.txt")
-		defer functionFile.Close()
+	for _, r := range rates {
+		environment.EvaluationRate = r //int(math.Pow(2, float64(r+start))) //0
 
 		for i := 0; i < compare; i++ {
+			environment.ProgressFileName = path + "/Progress_" + strconv.Itoa(environment.EvaluationRate) + "_" + strconv.Itoa(i)
 			goterm.MoveCursor(7, 1)
-			goterm.Printf("Testing Rate %d: %d\n%s", options.EvaluationRate, i, makeProgressBar(i, compare, 50))
+			goterm.Printf("Testing Rate %d: %d\n%s", environment.EvaluationRate, i, makeProgressBar(i, compare, 50))
 			goterm.Flush() // Call it every time at the end of rendering
 			//options.ProgressFileName = "EvaluationRateTest" + aType + "/EvaluationRateTest" + strconv.Itoa(options.EvaluationRate) + "_" + strconv.Itoa(i)
-			bestIndividual, cycle := a.Optimize(options, fitnessFunction, Approximator)
-			line := []string{"Rate " + strconv.Itoa(options.EvaluationRate), strconv.FormatFloat(bestIndividual.Fitness, 'E', -1, 64), strconv.Itoa(cycle)}
+			bestIndividual, cycle := a.Optimize(environment)
+			line := []string{"Rate " + strconv.Itoa(environment.EvaluationRate), strconv.FormatFloat(bestIndividual.Fitness, 'E', -1, 64), strconv.Itoa(cycle)}
 			writer.Write(line)
-			functionFile.WriteString(Approximator.GetFunction() + "\n\n")
+			writer.Flush()
+
 		}
 	}
 }
