@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/gonum/matrix/mat64"
+	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective"
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
 )
 
@@ -84,4 +85,15 @@ func round(val float64, places int) (newVal float64) {
 	}
 	newVal = round / pow
 	return
+}
+
+func TestAppromation(t *testing.T) {
+	testObjective := Objective.GetObjective("Ackley")
+	testApproximator := Create()
+	population := Population.InitRandomPopulation(100, 2, -100.0, 100.0)
+	population.Evaluate(testObjective.EvaluateFitness)
+	testApproximator.Update(population)
+	t.Log(testApproximator.Formatted())
+	t.Log(testApproximator.Predict([]float64{2.0, 2.0}))
+
 }

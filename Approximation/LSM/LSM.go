@@ -1,6 +1,9 @@
 package LSM
 
 import (
+	"fmt"
+	"math"
+
 	"github.com/gonum/matrix/mat64"
 	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
 )
@@ -10,6 +13,7 @@ type LSM struct {
 	ApproximationMatrix mat64.Dense
 }
 
+//Create new instance of RBF
 func Create() *LSM {
 	return &LSM{}
 }
@@ -34,18 +38,24 @@ func (a *LSM) Update(population Population.Population) {
 
 	a.ApproximationMatrix = theta
 }
+func square(value []float64) []float64 {
+	var squared []float64
+	for _, v := range value {
+		squared = append(squared, math.Pow(v, 2))
+	}
+	return squared
+}
 
 //Predict applies the given value to the approximator
 func (a *LSM) Predict(value []float64) float64 {
-	valueVector := mat64.NewDense(1, len(value)+1, append([]float64{1.0}, value...))
-	/*valueVector.Apply(func(_, _ int, v float64) float64 {
-		return math.Pow(v, 2)
-	}, valueVector)*/
+	squaredValue := square(value)
+	dimensionValue := append(value, squaredValue...)
+	valueVector := mat64.NewDense(1, 2*len(value)+1, append([]float64{1.0}, dimensionValue...))
+	//valueVector := mat64.NewDense(1, len(value)+1, append([]float64{1.0}, value...))
+	//valueVector := mat64.NewDense(1, len(value), value)
 	var resultMatrix mat64.Dense
 	resultMatrix.Mul(valueVector, &a.ApproximationMatrix)
 	result := resultMatrix.At(0, 0)
-	//result := math.Abs(resultMatrix.At(0, 0))
-
 	return result
 }
 
@@ -62,9 +72,22 @@ func generateFitnessVector(population Population.Population) *mat64.Dense {
 func generateValueMatrix(population Population.Population) *mat64.Dense {
 	n := len(population)          //Values
 	k := len(population[0].Value) //Dimensions
-	valueMatrix := mat64.NewDense(n, k+1, make([]float64, n*(k+1)))
+	/*valueMatrix := mat64.NewDense(n, k+1, make([]float64, n*(k+1)))
 	for i := 0; i < n; i++ {
 		valueMatrix.SetRow(i, append([]float64{1.0}, population[i].Value...))
+	}*/
+	valueMatrix := mat64.NewDense(n, (2*k)+1, make([]float64, n*((2*k)+1)))
+	for i := 0; i < n; i++ {
+		multiDimensionValue := append(population[i].Value, square(population[i].Value)...)
+		valueMatrix.SetRow(i, append([]float64{1.0}, multiDimensionValue...))
 	}
+	/*valueMatrix := mat64.NewDense(n, k, make([]float64, n*k))
+	for i := 0; i < n; i++ {
+		valueMatrix.SetRow(i, population[i].Value)
+	}*/
 	return valueMatrix
+}
+
+func (a *LSM) Formatted() string {
+	return fmt.Sprint(mat64.Formatted(&a.ApproximationMatrix))
 }
