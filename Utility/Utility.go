@@ -16,7 +16,6 @@ var convergenceCycle int
 var writer *csv.Writer
 var file *os.File
 
-//TODO was macht defer ??
 //Setup initialises CSV file
 func Setup(e e.Environment) {
 

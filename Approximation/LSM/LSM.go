@@ -88,6 +88,7 @@ func generateValueMatrix(population Population.Population) *mat64.Dense {
 	return valueMatrix
 }
 
+//Formatted converts Approximator to readable string
 func (a *LSM) Formatted() string {
 	return fmt.Sprint(mat64.Formatted(&a.ApproximationMatrix))
 }

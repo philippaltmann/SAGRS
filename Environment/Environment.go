@@ -24,6 +24,7 @@ type Environment struct {
 	Objective           string
 }
 
+//Dump Formats and writes current Environment to json File
 func (e Environment) Dump(path string) {
 	env, _ := json.Marshal(e)
 	ioutil.WriteFile(path, env, 0644)

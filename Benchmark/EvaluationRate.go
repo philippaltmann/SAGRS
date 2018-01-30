@@ -12,6 +12,7 @@ import (
 	e "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Environment"
 )
 
+//TestEvaluationRates Runs tests for different evaluation rates
 func TestEvaluationRates(compare int, rates []int, approximator string, objective string, cycles int) {
 	environment := e.Environment{
 		SuggestToEvaluation: 1,

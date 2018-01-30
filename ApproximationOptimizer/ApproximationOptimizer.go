@@ -9,9 +9,7 @@ import (
 	u "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Utility"
 )
 
-//TODO rename recommender + run
-//TODO clean, refactor -> *util
-//TODO comment
+//Optimize runs System for given Environment
 func Optimize(e e.Environment) (bestIndividual i.Individual, cycle int) {
 
 	//Generate Approximator & Objective

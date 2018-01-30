@@ -76,6 +76,7 @@ func (a RBF) Predict(value []float64) float64 {
 	return result
 }
 
+//Formatted converts Approximator to readable string
 func (a *RBF) Formatted() string {
 	return ""
 }
