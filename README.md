@@ -7,3 +7,6 @@
 **specific**: rates | convergence | suggestions  
 **approximation model**: RBF | LSM  
 **objective**: Bohachevsky | Ackley | Schwefel
+
+### Evaluation Rate Testsuite
+```$ go run main.go benchmark rates```
