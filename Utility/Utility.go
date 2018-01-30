@@ -36,6 +36,7 @@ func Setup(e e.Environment) {
 //WriteProgress writes progress to csv file
 func WriteProgress(e e.Environment, cycle int, evaluationPool, suggestions p.Population, approximator a.Approximator) {
 	better, worse, bestFitness := computeSuccess(suggestions, evaluationPool)
+	bestFitness = evaluationPool[0].Fitness
 	updateConvergence(e, worse, cycle, evaluationPool)
 	if e.WriteProgress {
 		writeCSV(e, cycle, worse, bestFitness, suggestions, approximator)
