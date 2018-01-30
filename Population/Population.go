@@ -85,7 +85,7 @@ func (population *Population) Fillup(size, dimensions int, min, max float64) {
 }
 
 /*GetDiversity calculates the populations diversity using the normed Euclidean Distance
-between the Indivuduals, dividing by the population size*/
+between the Individuals, dividing by the population size*/
 func (population Population) GetDiversity() (diversity float64) {
 	for i := 0; i < len(population); i++ {
 		for j := i; j < len(population); j++ {
