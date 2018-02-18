@@ -1,16 +1,16 @@
-package ApproximationOptimizer
+package Recommender
 
 import (
-	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation"
-	e "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Environment"
-	i "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Individual"
-	o "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective"
-	p "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
-	u "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Utility"
+	a "github.com/philipp-altmann/SAGRS/Approximation"
+	e "github.com/philipp-altmann/SAGRS/Environment"
+	i "github.com/philipp-altmann/SAGRS/Individual"
+	o "github.com/philipp-altmann/SAGRS/Objective"
+	p "github.com/philipp-altmann/SAGRS/Population"
+	u "github.com/philipp-altmann/SAGRS/Utility"
 )
 
-//Optimize runs System for given Environment
-func Optimize(e e.Environment) (bestIndividual i.Individual, cycle int) {
+//Run Recommender System for given Environment
+func Run(e e.Environment) (bestIndividual i.Individual, cycle int) {
 
 	//Generate Approximator & Objective
 	Objective := o.GetObjective(e.Objective)
@@ -34,7 +34,7 @@ func Optimize(e e.Environment) (bestIndividual i.Individual, cycle int) {
 	for cycle := 0; cycle < e.Cycles; cycle++ {
 		if e.ResetPool {
 			//Init, Approximate & Sort Population
-			population := p.InitRandomPopulation(e.PopulationSize, e.Dimensions, Objective.Min(), Objective.Max())
+			population = p.InitRandomPopulation(e.PopulationSize-1, e.Dimensions, Objective.Min(), Objective.Max())
 			population.Evaluate(Approximator.Predict)
 		}
 
