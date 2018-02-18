@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/buger/goterm"
-	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation"
-	e "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Environment"
-	p "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	a "github.com/philipp-altmann/SAGRS/Approximation"
+	e "github.com/philipp-altmann/SAGRS/Environment"
+	p "github.com/philipp-altmann/SAGRS/Population"
 )
 
 func writeConsole(e e.Environment, cycle, better, worse int, evaluationPool p.Population, Approximator a.Approximator) {
@@ -32,6 +32,9 @@ func getBetterLamp(better int) string {
 }
 
 func makeProgressBar(i, from, length int, color int) string {
+	if from == 0 {
+		from = 10
+	}
 	done := int(float64(i) / float64(from) * float64(length))
 	return "[" + goterm.Color(strings.Repeat("=", done), color) + strings.Repeat("-", length-done) + "]"
 }

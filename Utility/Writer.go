@@ -3,9 +3,9 @@ package Utility
 import (
 	"strconv"
 
-	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation"
-	e "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Environment"
-	p "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	a "github.com/philipp-altmann/SAGRS/Approximation"
+	e "github.com/philipp-altmann/SAGRS/Environment"
+	p "github.com/philipp-altmann/SAGRS/Population"
 )
 
 //TODO write tests
@@ -25,7 +25,7 @@ func writeCSV(e e.Environment, cycle, worse int, bestFitness float64, suggestion
 	line[2] = formatFloat(float64(e.SuggestToEvaluation-worse) / float64(e.SuggestToEvaluation))
 
 	//Approximation Error
-	line[3] = formatFloat(approximator.Predict(suggestions[0].Value) - objective.EvaluateFitness(suggestions[0].Value))
+	line[3] = "" //formatFloat(approximator.Predict(suggestions[0].Value) - objective.EvaluateFitness(suggestions[0].Value))
 
 	//Write & Close File
 	writer.Write(line)
