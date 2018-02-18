@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/buger/goterm"
-	a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/ApproximationOptimizer"
-	e "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Environment"
+	e "github.com/philipp-altmann/SAGRS/Environment"
+	"github.com/philipp-altmann/SAGRS/Recommender"
 )
 
 //TestEvaluationRates Runs tests for different evaluation rates
@@ -24,7 +24,7 @@ func TestEvaluationRates(compare int, rates []int, approximator string, objectiv
 		RecombinationFactor: 0.05,
 		WriteProgress:       true,
 		Verbose:             true,
-		ResetPool:           false,
+		ResetPool:           true,
 		Cycles:              cycles,
 		Approximator:        approximator,
 		Objective:           objective}
@@ -75,9 +75,8 @@ func TestEvaluationRates(compare int, rates []int, approximator string, objectiv
 			environment.ProgressFileName = path + "/Progress_" + strconv.Itoa(environment.EvaluationRate) + "_" + strconv.Itoa(i)
 			goterm.MoveCursor(7, 1)
 			goterm.Printf("Testing Rate %d: %d\n%s", environment.EvaluationRate, i, makeProgressBar(i, compare, 50))
-			goterm.Flush() // Call it every time at the end of rendering
-			//options.ProgressFileName = "EvaluationRateTest" + aType + "/EvaluationRateTest" + strconv.Itoa(options.EvaluationRate) + "_" + strconv.Itoa(i)
-			bestIndividual, cycle := a.Optimize(environment)
+			goterm.Flush()
+			bestIndividual, cycle := Recommender.Run(environment)
 			line := []string{"Rate " + strconv.Itoa(environment.EvaluationRate), strconv.FormatFloat(bestIndividual.Fitness, 'E', -1, 64), strconv.Itoa(cycle)}
 			writer.Write(line)
 			writer.Flush()
