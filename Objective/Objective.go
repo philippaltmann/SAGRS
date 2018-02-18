@@ -1,9 +1,9 @@
 package Objective
 
-import l "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Linear"
-import a "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Ackley"
-import b "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Bohachevsky"
-import s "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective/Schwefel"
+import l "github.com/philipp-altmann/SAGRS/Objective/Linear"
+import a "github.com/philipp-altmann/SAGRS/Objective/Ackley"
+import b "github.com/philipp-altmann/SAGRS/Objective/Bohachevsky"
+import s "github.com/philipp-altmann/SAGRS/Objective/Schwefel"
 
 //Objective Interface for universal use of Objectives
 type Objective interface {
