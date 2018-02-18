@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/gonum/matrix/mat64"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	"github.com/philipp-altmann/SAGRS/Objective"
+	"github.com/philipp-altmann/SAGRS/Population"
 )
 
 var input [][]float64

@@ -4,8 +4,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	"github.com/philipp-altmann/SAGRS/Objective"
+	"github.com/philipp-altmann/SAGRS/Population"
 )
 
 var input = [][]float64{{-2}, {-1}, {0}, {1}, {2}}
@@ -15,7 +15,7 @@ var testSize = 10
 var testDimensions = 1
 var testPopulation = Population.InitRandomPopulation(testSize, testDimensions, -100.0, 100.0)
 
-var testApproximator = RBF{}
+var testApproximator = Create()
 var testObjective = Objective.GetObjective("Ackley")
 
 func TestUpdate(t *testing.T) {
@@ -39,6 +39,7 @@ func TestUpdate(t *testing.T) {
 	testPopulation.Mutate(1)
 	testPopulation.Evaluate(testObjective.EvaluateFitness)
 	testApproximator.Update(testPopulation)
+	testApproximator.Formatted()
 
 	//Compare
 	input, output = getInputOutput(testPopulation)

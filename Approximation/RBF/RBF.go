@@ -4,12 +4,12 @@ import (
 	"math"
 
 	"github.com/gonum/matrix/mat64"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	"github.com/philipp-altmann/SAGRS/Population"
 )
 
 //RBF Approximator for universal use with approximation interface
 type RBF struct {
-	HiddenLayer []BiasFunction
+	HiddenLayer []RadialBasisFunction
 	Weights     []float64
 }
 
@@ -18,7 +18,7 @@ func Create() *RBF {
 	return &RBF{}
 }
 
-//getFunctionMatrix applies the hidden layer bias functions to the input
+//getFunctionMatrix applies the hidden layer basis functions to the input
 func (a RBF) getFunctionMatrix(input [][]float64) *mat64.Dense {
 	var functionSlice []float64
 	for _, layer := range a.HiddenLayer {
@@ -48,7 +48,7 @@ func (a *RBF) Update(population Population.Population) {
 	averageDistance /= float64(len(input))
 
 	//"Train" Layers
-	a.HiddenLayer = make([]BiasFunction, len(input))
+	a.HiddenLayer = make([]RadialBasisFunction, len(input))
 	for i := 0; i < len(input); i++ {
 		a.HiddenLayer[i].center = append([]float64(nil), input[i]...)
 		a.HiddenLayer[i].width = averageDistance

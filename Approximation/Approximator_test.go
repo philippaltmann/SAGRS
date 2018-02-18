@@ -4,8 +4,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	"github.com/philipp-altmann/SAGRS/Objective"
+	"github.com/philipp-altmann/SAGRS/Population"
 )
 
 func TestApproximator(t *testing.T) {

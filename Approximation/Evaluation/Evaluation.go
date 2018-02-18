@@ -1,8 +1,8 @@
 package Evaluation
 
 import (
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Objective"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	"github.com/philipp-altmann/SAGRS/Objective"
+	"github.com/philipp-altmann/SAGRS/Population"
 )
 
 //Evaluation fake approximates, evaluating with a fitness function

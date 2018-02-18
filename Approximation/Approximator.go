@@ -1,10 +1,10 @@
 package Approximation
 
 import (
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation/Evaluation"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation/LSM"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Approximation/RBF"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	"github.com/philipp-altmann/SAGRS/Approximation/Evaluation"
+	"github.com/philipp-altmann/SAGRS/Approximation/LSM"
+	"github.com/philipp-altmann/SAGRS/Approximation/RBF"
+	"github.com/philipp-altmann/SAGRS/Population"
 )
 
 //Approximator interface for universal apporixmator usage

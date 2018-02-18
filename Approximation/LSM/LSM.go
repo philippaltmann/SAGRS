@@ -5,7 +5,7 @@ import (
 	"math"
 
 	"github.com/gonum/matrix/mat64"
-	"github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Population"
+	"github.com/philipp-altmann/SAGRS/Population"
 )
 
 //LSM Approximator for universal use with approximation interface

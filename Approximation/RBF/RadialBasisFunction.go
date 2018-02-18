@@ -2,14 +2,14 @@ package RBF
 
 import "math"
 
-//BiasFunction Calculatable Function, center and width dependent
-type BiasFunction struct {
+//RadialBasisFunction Calculatable Function, center and width dependent
+type RadialBasisFunction struct {
 	center []float64
 	width  float64
 }
 
-//Calculate applies the given value to the Bias Function
-func (f BiasFunction) Calculate(value []float64) float64 {
+//Calculate applies the given value to the Radial Basis Function
+func (f RadialBasisFunction) Calculate(value []float64) float64 {
 	return 1 - math.Exp(-(EuclideanDistance(value, f.center))/(2*math.Pow(f.width, 2)))
 }
 
