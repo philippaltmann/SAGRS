@@ -6,7 +6,7 @@ import (
 	"sort"
 	"time"
 
-	i "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Individual"
+	i "github.com/philipp-altmann/SAGRS/Individual"
 )
 
 //Population is a Slice of individuals with custom applyable functions

@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	i "github.com/philipp-altmann/ContinuousBenchmarkOptimizer/Individual"
+	i "github.com/philipp-altmann/SAGRS/Individual"
 )
 
 var testPopulation Population
